@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="60">
+  <Properties>
+    <Property name="LOG_DIR">${sys:jboss.server.log.dir:-${sys:cms.logging.directory:-logs}}</Property>
+    <Property name="LOG_PATTERN">${sys:cms.logging.pattern:-%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %logger [request=%X{requestId} userId=%X{userId} userName=%X{userName}] - %msg%throwable%n}</Property>
+  </Properties>
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${LOG_PATTERN}" />
+    </Console>
+    <RollingFile name="ApplicationFile"
+                 fileName="${LOG_DIR}/${sys:cms.logging.file-name:-cms-application.log}"
+                 filePattern="${LOG_DIR}/archive/${sys:cms.logging.archive-pattern:-cms-application-%d{yyyy-MM-dd}-%i.log.gz}"
+                 append="true" immediateFlush="true">
+      <PatternLayout pattern="${LOG_PATTERN}" />
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+        <SizeBasedTriggeringPolicy size="${sys:cms.logging.rotation-size:-10 MB}" />
+      </Policies>
+      <DefaultRolloverStrategy max="${sys:cms.logging.retained-archives:-14}" />
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Logger name="com.cms" level="${sys:cms.logging.application-level:-info}" />
+    <Root level="${sys:cms.logging.root-level:-info}">
+      <AppenderRef ref="Console" />
+      <AppenderRef ref="ApplicationFile" />
+    </Root>
+  </Loggers>
+</Configuration>

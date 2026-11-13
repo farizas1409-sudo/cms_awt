@@ -1,0 +1,6 @@
+# JBoss EAP 8 / WildFly Oracle 19c datasource for CMS.
+# Prerequisites: register the Oracle JDBC driver under the driver name "oracle".
+# Set CMS_DB_URL, CMS_DB_USER, and CMS_DB_PASSWORD in the server process environment.
+data-source add --name=CmsDS --jndi-name=java:jboss/datasources/CmsDS --driver-name=oracle --connection-url=${env.CMS_DB_URL} --user-name=${env.CMS_DB_USER} --password=${env.CMS_DB_PASSWORD} --min-pool-size=5 --initial-pool-size=5 --max-pool-size=50 --pool-prefill=false --pool-use-strict-min=false --pool-fair=false --blocking-timeout-wait-millis=30000 --idle-timeout-minutes=5 --allocation-retry=3 --allocation-retry-wait-millis=1000 --background-validation-millis=60000 --validate-on-match=false --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleValidConnectionChecker --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleExceptionSorter --prepared-statements-cache-size=100 --share-prepared-statements=true --query-timeout=60 --set-tx-query-timeout=true --track-statements=nowarn --use-fast-fail=true --flush-strategy=FailingConnectionOnly --statistics-enabled=true --enabled=true
+/subsystem=datasources/data-source=CmsDS:test-connection-in-pool
+/subsystem=datasources/data-source=CmsDS:read-resource(include-runtime=true,recursive=true)
